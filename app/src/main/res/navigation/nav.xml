@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/fragmentLog">
+
+    <fragment
+        android:id="@+id/fragmentLog"
+        android:name="com.example.firebaseapp.FragmentLog"
+        android:label="fragment_log"
+        tools:layout="@layout/fragment_log" >
+        <action
+            android:id="@+id/action_fragmentLog_to_fragmentRegister"
+            app:destination="@id/fragmentRegister" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentRegister"
+        android:name="com.example.firebaseapp.FragmentRegister"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_fragmentRegister_to_fragmentLog"
+            app:destination="@id/fragmentLog" />
+    </fragment>
+</navigation>
