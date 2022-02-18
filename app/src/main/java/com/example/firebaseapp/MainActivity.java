@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void addData(){
 
-        User user = new User(userName , mailText , phoneText , "1234478");
+        User user = new User(userName , mailText , phoneText);
 
         Log.d("result" , "oop");
 

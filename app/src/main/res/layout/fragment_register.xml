@@ -4,50 +4,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".FragmentRegister">
-
+    tools:context=".FragmentRegister"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <EditText
         android:id="@+id/userText"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="30dp"
         android:layout_weight="1"
+        android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Username" />
 
     <EditText
         android:id="@+id/passText"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="30dp"
         android:layout_weight="1"
+        android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Password" />
 
     <EditText
         android:id="@+id/phoneText"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="30dp"
         android:layout_weight="1"
+        android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Phone" />
 
     <EditText
         android:id="@+id/mailText"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="30dp"
         android:layout_weight="1"
+        android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Mail" />
 
     <Button
         android:id="@+id/buttonSubmit"
+        app:backgroundTint="@color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="30dp"
         android:layout_weight="1"
-        android:text="Submit"
+        android:text="Register"
         android:textSize="34sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:cornerRadius="50dp"/>
+
 </LinearLayout>

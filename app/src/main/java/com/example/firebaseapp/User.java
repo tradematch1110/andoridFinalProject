@@ -6,14 +6,14 @@ public class User {
     private String email;
     private String phone;
     private String id;
-
+    static int count=0;
     public User() {}
 
-    public User(String name, String email, String phone, String id) {
+    public User(String name, String email, String phone) {
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.id ="1";
+        this.id =(++count)+"";
     }
 
     public String getName() {
