@@ -6,14 +6,14 @@ public class User {
     private String email;
     private String phone;
     private String id;
-    static int count=0;
+//    static int count=0;
     public User() {}
 
     public User(String name, String email, String phone) {
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.id =(++count)+"";
+//        this.id =(++count)+"";
     }
 
     public String getName() {
@@ -40,11 +40,11 @@ public class User {
         this.phone = phone;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public String getId() {
+//        return id;
+//    }
 }
