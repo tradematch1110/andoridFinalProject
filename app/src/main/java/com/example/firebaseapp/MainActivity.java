@@ -25,11 +25,30 @@ public class MainActivity extends AppCompatActivity {
     private String phoneText;
     private String mailText;
     long maxId=0;
+    DatabaseReference myRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("users").child(user.getId());
+//        myRef.setValue(user);
+        myRef = database.getReference().child("Users");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                    maxId=(snapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
     }
     public void loginFunction(){
@@ -79,10 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("result" , "oop");
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("users").child(user.getId());
-//        myRef.setValue(user);
-        DatabaseReference myRef = database.getReference().child("Users");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
