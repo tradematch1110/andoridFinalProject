@@ -2,59 +2,43 @@ package com.example.firebaseapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentRegister#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.firebaseapp.services.FirebaseService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+import org.w3c.dom.Text;
+
 public class FragmentRegister extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private TextView userName;
+    private TextView password;
+    private TextView phoneText;
+    private TextView mailText;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FirebaseAuth mAuth;
 
     public FragmentRegister() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentRegister.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentRegister newInstance(String param1, String param2) {
-        FragmentRegister fragment = new FragmentRegister();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -62,14 +46,29 @@ public class FragmentRegister extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_register, container, false);
+
+        this.mAuth = FirebaseAuth.getInstance();
+        this.userName = view.findViewById(R.id.userText);
+        this.password = view.findViewById(R.id.passText);
+        this.phoneText = view.findViewById(R.id.phoneText);
+        this.mailText = view.findViewById(R.id.mailText);
+
         Button button = view.findViewById(R.id.buttonSubmit);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity ma = (MainActivity) getActivity();
-                ma.regFunction();
-
-                Navigation.findNavController(view).navigate(R.id.action_fragmentRegister_to_fragmentLog);
+                mAuth.createUserWithEmailAndPassword(mailText.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseService.addData(userName.getText().toString(), mailText.getText().toString(), phoneText.getText().toString());
+                            Navigation.findNavController(view).navigate(R.id.action_fragmentRegister_to_fragmentLog);
+                        } else
+                        {
+                            Toast.makeText(getActivity(), "Error cannot register new user", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
 

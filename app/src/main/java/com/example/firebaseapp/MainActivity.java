@@ -24,34 +24,32 @@ public class MainActivity extends AppCompatActivity {
     private String password;
     private String phoneText;
     private String mailText;
-    long maxId=0;
-    DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("users").child(user.getId());
 //        myRef.setValue(user);
-        myRef = database.getReference().child("Users");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                    maxId=(snapshot.getChildrenCount());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//        myRef = database.getReference().child("Users");
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if(snapshot.exists())
+//                    maxId=(snapshot.getChildrenCount());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
     }
-    public void loginFunction(){
+    public void loginFunction(LoginDelegate loginDelegate){
         String email = ((EditText)findViewById(R.id.username)).getText().toString();
         String password = ((EditText)findViewById(R.id.password)).getText().toString();
         mAuth.signInWithEmailAndPassword(email, password)
@@ -60,60 +58,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("result", "login ok ");
+                            loginDelegate.onSuccess();
                         } else {
                             Log.d("result", "login fail ");
+                            loginDelegate.onError();
                         }
 
                         // ...
                     }
                 });
-
-    }
-    public void regFunction(){
-         userName = ((EditText)findViewById(R.id.userText)).getText().toString();
-         password = ((EditText)findViewById(R.id.passText)).getText().toString();
-         phoneText = ((EditText)findViewById(R.id.phoneText)).getText().toString();
-         mailText = ((EditText)findViewById(R.id.mailText)).getText().toString();
-
-
-        mAuth.createUserWithEmailAndPassword(mailText, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            addData();
-                            Log.d("result", "register ok ");
-                        } else {
-                            Log.d("result", "register fail ");
-                        }
-
-                        // ...
-                    }
-                });
-
-    }
-    public void addData(){
-
-        User user = new User(userName , mailText , phoneText);
-
-        Log.d("result" , "oop");
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                    maxId=(snapshot.getChildrenCount());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        myRef.child(String.valueOf(maxId+1)).setValue(user);
-
-    }
-    public void getData(){
 
     }
 }

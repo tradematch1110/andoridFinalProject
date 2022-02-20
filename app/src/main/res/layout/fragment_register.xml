@@ -16,7 +16,7 @@
         android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Username" />
+        android:hint="Username" />
 
     <EditText
         android:id="@+id/passText"
@@ -28,7 +28,7 @@
         android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Password" />
+        android:hint="Password" />
 
     <EditText
         android:id="@+id/phoneText"
@@ -40,7 +40,7 @@
         android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Phone" />
+        android:hint="Phone" />
 
     <EditText
         android:id="@+id/mailText"
@@ -52,7 +52,7 @@
         android:ellipsize="none"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Mail" />
+        android:hint="Mail" />
 
     <Button
         android:id="@+id/buttonSubmit"
@@ -62,7 +62,7 @@
         android:layout_margin="30dp"
         android:layout_weight="1"
         android:text="Register"
-        android:textSize="34sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
         app:cornerRadius="50dp"/>
 

@@ -7,12 +7,15 @@
 
     <fragment
         android:id="@+id/fragmentLog"
-        android:name="com.example.firebaseapp.FragmentLog"
+        android:name="com.example.firebaseapp.FragmentLogIn"
         android:label="fragment_log"
         tools:layout="@layout/fragment_log" >
         <action
             android:id="@+id/action_fragmentLog_to_fragmentRegister"
             app:destination="@id/fragmentRegister" />
+        <action
+            android:id="@+id/action_fragmentLog_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentRegister"
@@ -23,4 +26,9 @@
             android:id="@+id/action_fragmentRegister_to_fragmentLog"
             app:destination="@id/fragmentLog" />
     </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.firebaseapp.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
 </navigation>
