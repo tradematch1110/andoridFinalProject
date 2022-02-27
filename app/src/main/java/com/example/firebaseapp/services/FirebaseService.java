@@ -17,30 +17,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseService {
 
-    public static void addData(String userName, String mailText, String phoneText){
+    public static void addUser(String userName, String mailText, String phoneText){
 
         User user = new User(userName , mailText , phoneText);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         myRef.setValue(user);
-//        Log.d("result" , "oop");
-//
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if(snapshot.exists())
-//                    maxId=(snapshot.getChildrenCount());
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//        myRef.child(String.valueOf(maxId+1)).setValue(user);
 
     }
-    public void getData(){
+    public void getUser(){
 
     }
 }

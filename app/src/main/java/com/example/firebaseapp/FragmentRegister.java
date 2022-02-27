@@ -6,12 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,8 +18,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import org.w3c.dom.Text;
 
 public class FragmentRegister extends Fragment {
 
@@ -61,7 +57,7 @@ public class FragmentRegister extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseService.addData(userName.getText().toString(), mailText.getText().toString(), phoneText.getText().toString());
+                            FirebaseService.addUser(userName.getText().toString(), mailText.getText().toString(), phoneText.getText().toString());
                             Navigation.findNavController(view).navigate(R.id.action_fragmentRegister_to_fragmentLog);
                         } else
                         {
