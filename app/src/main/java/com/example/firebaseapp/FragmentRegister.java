@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class FragmentRegister extends Fragment {
 
@@ -57,8 +58,22 @@ public class FragmentRegister extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseService.addUser(userName.getText().toString(), mailText.getText().toString(), phoneText.getText().toString());
-                            Navigation.findNavController(view).navigate(R.id.action_fragmentRegister_to_fragmentLog);
+                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(userName.getText().toString()).build();
+                            mAuth.getCurrentUser().updateProfile(profileChangeRequest)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Navigation.findNavController(view).navigate(R.id.action_fragmentRegister_to_fragmentLog);
+                                        FirebaseService.addUser(userName.getText().toString(), mailText.getText().toString(), phoneText.getText().toString());
+                                        Toast.makeText(getActivity(), "User profile updated.", Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        Toast.makeText(getActivity(), "Error cannot register new user", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+
                         } else
                         {
                             Toast.makeText(getActivity(), "Error cannot register new user", Toast.LENGTH_LONG).show();

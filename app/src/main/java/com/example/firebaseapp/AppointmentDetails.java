@@ -1,20 +1,31 @@
 package com.example.firebaseapp;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class AppointmentDetails {
-    private String date;
+    private String username;
     private String hour;
 
-    public AppointmentDetails(String date, String hour) {
-        this.date = date;
+    @Override
+    public String toString() {
+        return "AppointmentDetails{" +
+                "username='" + username + '\'' +
+                ", hour='" + hour + '\'' +
+                '}';
+    }
+
+    public AppointmentDetails() {}
+    public AppointmentDetails(String username, String hour) {
+        this.username = username;
         this.hour = hour;
     }
 
-    public String getDate() {
-        return date;
+    public String getUsername() {
+        return username;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getHour() {

@@ -52,12 +52,15 @@ public class MainActivity extends AppCompatActivity {
     public void loginFunction(LoginDelegate loginDelegate){
         String email = ((EditText)findViewById(R.id.username)).getText().toString();
         String password = ((EditText)findViewById(R.id.password)).getText().toString();
+//        String displayName = ((EditText)findViewById(R.id.userText)).getText().toString();
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("result", "login ok ");
+
                             loginDelegate.onSuccess();
                         } else {
                             Log.d("result", "login fail ");

@@ -11,7 +11,6 @@ public class DayOfWeek {
     private double breakHourEnd;
 
 
-
     public DayOfWeek(int dayNumber, boolean isOff, double openHour, double closeHour, double breakHourStrat, double breakHourEnd) {
         this.dayNumber = dayNumber;
         this.isOff = isOff;
@@ -68,4 +67,17 @@ public class DayOfWeek {
     public void setBreakHourEnd(double breakHourEnd) {
         this.breakHourEnd = breakHourEnd;
     }
+
+    @Override
+    public String toString() {
+        return "DayOfWeek{" +
+                "dayNumber=" + dayNumber +
+                ", isOff=" + isOff +
+                ", openHour=" + openHour +
+                ", closeHour=" + closeHour +
+                ", breakHourStrat=" + breakHourStrat +
+                ", breakHourEnd=" + breakHourEnd +
+                '}';
+    }
+
 }

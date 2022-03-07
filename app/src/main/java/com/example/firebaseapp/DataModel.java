@@ -7,9 +7,8 @@ public class DataModel {
     int id_;
 //    int image;
 
-    public DataModel(String name, String version, int id_) {
+    public DataModel(String name,  int id_) {
         this.name = name;
-        this.version = version;
         this.id_ = id_;
 //        this.image=image;
     }

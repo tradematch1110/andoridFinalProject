@@ -1,41 +1,23 @@
 package com.example.firebaseapp;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class SelectedDate {
-    private String date;
-    private HashMap<String, AppointmentDetails> appointment;
-    private int dayNumber;
-
+    private AppointmentDetails appointmentDetails;
     // constructor
-    public SelectedDate(String date, int dayNumber) {
-        this.date = date;
-        this.dayNumber=dayNumber;
-        appointment = new HashMap<>();
-    }
-    public HashMap<String, AppointmentDetails> getAppointment() {
-        return appointment;
+    public SelectedDate(AppointmentDetails appointmentDetails) {
+        this.appointmentDetails = appointmentDetails;
     }
 
-    public void setAppointment(HashMap<String, AppointmentDetails> appointment) {
-        this.appointment = appointment;
+    public AppointmentDetails getAppointmentDetails() {
+        return appointmentDetails;
     }
 
-    public String getDate() {
-        return date;
+    public void setAppointmentDetails(AppointmentDetails appointmentDetails) {
+        this.appointmentDetails = appointmentDetails;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 
-    public int getDayNumber() {
-        return dayNumber;
-    }
-
-    public void setDayNumber(int dayNumber) {
-        this.dayNumber = dayNumber;
-    }
 
 
 }

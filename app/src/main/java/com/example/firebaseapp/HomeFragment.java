@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firebaseapp.services.FirebaseService;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +28,7 @@ import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
 //    SharedPreferences sharedPreferences;
+    private String userDisplayName;
     TextView date;
     private ArrayList<DataModel> dataSet;
 //    private AppCompatActivity appCompatActivity;
@@ -43,6 +45,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        userDisplayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toString();
 
 //        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 //        String key = sharedPreferences.getString("KEY", null);
@@ -74,7 +77,6 @@ public class HomeFragment extends Fragment {
         {
             dataSet.add(new DataModel(
                     MyData.nameArray[i],
-                    MyData.versionArray[i],
                     MyData.id_[i]
 
             ));
@@ -94,6 +96,17 @@ public class HomeFragment extends Fragment {
                 int dayNumber = calendar.get(Calendar.DAY_OF_WEEK);
                 String selectedDateToDB = dayOfMonth+""+(month+1)+""+year;
 
+//                DayOfWeek day =  FirebaseService.getDayOfWeek(dayNumber);
+
+
+//           *******  add SelectedDate to DB **************
+//                AppointmentDetails ad = new AppointmentDetails( userDisplayName ,"13:45");
+//                SelectedDate selectedDate1 = new SelectedDate( ad);
+//                FirebaseService.addSelectedDate(selectedDate1, selectedDateToDB);
+
+//           *******  getSelectedDate from DB **************
+                ArrayList<AppointmentDetails> appointmentDetails = FirebaseService.getSelectedDate(selectedDateToDB);
+
 //           *******  add day to database **************
 //                Day day = new Day();
 //                day.setDayNumber(dayNumber);
@@ -103,7 +116,7 @@ public class HomeFragment extends Fragment {
 
 
 //           *******  add dayOfWeek1 to database **************
-//                DayOfWeek dayOfWeek1 = new DayOfWeek(dayNumber, false,8.30, 14.00, 0, 0);
+//                DayOfWeek dayOfWeek1 = new DayOfWeek(dayNumber, false,9, 19, 14, 16);
 //                FirebaseService.createDayOfWeek(dayOfWeek1);
 //                Toast.makeText(getContext(), "DAY_OF_WEEK: "+ dayOfWeek, Toast.LENGTH_LONG).show();
 
