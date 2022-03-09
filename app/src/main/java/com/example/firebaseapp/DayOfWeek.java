@@ -11,6 +11,7 @@ public class DayOfWeek {
     private double breakHourEnd;
 
 
+    public DayOfWeek() {}
     public DayOfWeek(int dayNumber, boolean isOff, double openHour, double closeHour, double breakHourStrat, double breakHourEnd) {
         this.dayNumber = dayNumber;
         this.isOff = isOff;

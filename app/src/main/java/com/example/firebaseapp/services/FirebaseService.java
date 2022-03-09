@@ -31,6 +31,8 @@ public class FirebaseService {
     private static User user;
     private static DayOfWeek day;
     private static SelectedDate selectedDate;
+    private static ArrayList<AppointmentDetails> appointmentDetails;
+
     public static void addUser(String userName, String mailText, String phoneText){
 
         User user = new User(userName , mailText , phoneText);
@@ -67,7 +69,7 @@ public class FirebaseService {
 
     }
 
-    public static DayOfWeek getDayOfWeek(int dayNumber){
+    public static void getDayOfWeek(int dayNumber, DayOfWeekDelegate dayOfWeekDelegate){
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DaysOfWeek");
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -75,28 +77,51 @@ public class FirebaseService {
                     try {
                         for (DataSnapshot post : snapshot.getChildren())
                         {
-                            DayOfWeek day1 = post.getValue(DayOfWeek.class);
+                            DayOfWeek currentDay = post.getValue(DayOfWeek.class);
+                            if(currentDay.getDayNumber()==dayNumber){
+                                dayOfWeekDelegate.onSuccess(currentDay);
+                            }
                         }
                     } catch (Exception ex)
                     {
                         ex.printStackTrace();
                         Log.d("TAG", "", ex);
+                        dayOfWeekDelegate.onError();
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    dayOfWeekDelegate.onError();
                 }
             });
-
-        return day;
     }
 
     public static void addDay(Day day){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Days").child(day.getDate());
         myRef.setValue(day);
+    }
+    public static void getDay(String day, DayDelegate dayDelegate){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Days/"+day);
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                Day currentDay = dataSnapshot.getValue(Day.class);
+                dayDelegate.onSuccess(currentDay);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                dayDelegate.onError();
+                // Getting Post failed, log a message
+                Log.d("TAG", "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        myRef.addValueEventListener(postListener);
     }
 
     public static void addSelectedDate(SelectedDate selectedDate, String date){
@@ -115,25 +140,27 @@ public class FirebaseService {
     }
 //    public static ArrayList<AppointmentDetails> getSelectedDate(SelectedDate selectedDate1, String date){
 
-    public static ArrayList<AppointmentDetails> getSelectedDate( String date){
-        ArrayList<AppointmentDetails> appointmentDetails = new ArrayList<>();
+    public static void getSelectedDate(String date, SelectedDateDelegate selectedDateDelegate){
+        appointmentDetails = new ArrayList<>();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("SelectedDates/" + date);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
-                    for (DataSnapshot post : dataSnapshot.getChildren())
+                    int count =0;
+                    for (DataSnapshot ad : dataSnapshot.getChildren())
                     {
-                        appointmentDetails.add(post.getValue(AppointmentDetails.class));
-                        Log.d("TAG", post.toString());
+                        appointmentDetails.add(ad.getValue(AppointmentDetails.class));
+                        Log.d("TAG", "test: "+ appointmentDetails.get(count++).toString());
 
                     }
-
+                    selectedDateDelegate.onSuccess(appointmentDetails);
                 } catch (Exception ex)
                 {
                     ex.printStackTrace();
                     Log.d("TAG", "", ex);
+                    selectedDateDelegate.onError();
                 }
 
             }
@@ -141,10 +168,11 @@ public class FirebaseService {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("TAG", databaseError.getMessage()); //Don't ignore errors!
+                selectedDateDelegate.onError();
             }
+
         };
         ref.addValueEventListener(valueEventListener);
-        return appointmentDetails;
     }
 
 

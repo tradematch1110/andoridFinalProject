@@ -3,9 +3,7 @@ package com.example.firebaseapp;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,15 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.firebaseapp.services.DayDelegate;
+import com.example.firebaseapp.services.DayOfWeekDelegate;
 import com.example.firebaseapp.services.FirebaseService;
+import com.example.firebaseapp.services.SelectedDateDelegate;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 //    SharedPreferences sharedPreferences;
@@ -88,6 +89,7 @@ public class HomeFragment extends Fragment {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
+                //start show progressbar loading...
 //                Toast.makeText(getContext(), "Selected date: "+ dayOfMonth+"/"+month+"/"+year, Toast.LENGTH_LONG).show();
                 String selectedDate = dayOfMonth+"/"+(month+1)+"/"+year;
                 date.setText(selectedDate);
@@ -100,12 +102,13 @@ public class HomeFragment extends Fragment {
 
 
 //           *******  add SelectedDate to DB **************
-//                AppointmentDetails ad = new AppointmentDetails( userDisplayName ,"13:45");
+//                AppointmentDetails ad = new AppointmentDetails( userDisplayName ,new Date());
 //                SelectedDate selectedDate1 = new SelectedDate( ad);
 //                FirebaseService.addSelectedDate(selectedDate1, selectedDateToDB);
 
 //           *******  getSelectedDate from DB **************
-                ArrayList<AppointmentDetails> appointmentDetails = FirebaseService.getSelectedDate(selectedDateToDB);
+//                FirebaseService.getSelectedDate(selectedDateToDB);
+//                Log.d("TAG", "home fragment: "+ FirebaseService.appointmentDetails.size()+"");
 
 //           *******  add day to database **************
 //                Day day = new Day();
@@ -114,8 +117,46 @@ public class HomeFragment extends Fragment {
 //                day.setDate(selectedDateToDB);
 //                FirebaseService.addDay(day);
 
+//           *******  get day to database **************
+            //FirebaseService.getDay(selectedDateToDB);
 
 //           *******  add dayOfWeek1 to database **************
+                FirebaseService.getDayOfWeek(dayNumber, new DayOfWeekDelegate() {
+                    @Override
+                    public void onSuccess(DayOfWeek dayOfWeek) {
+                        if (!dayOfWeek.isOff()) {
+                            FirebaseService.getDay(selectedDateToDB, new DayDelegate() {
+                                @Override
+                                public void onSuccess(Day day) {
+                                    FirebaseService.getSelectedDate(selectedDateToDB, new SelectedDateDelegate() {
+                                        @Override
+                                        public void onSuccess(ArrayList<AppointmentDetails> appointmentDetailsArrayList) {
+                                            //present information to user
+                                            //load adapter
+                                            //hide progressbar
+                                            createList(appointmentDetailsArrayList, dayOfWeek, day, year,  month, dayOfMonth);
+                                        }
+
+                                        @Override
+                                        public void onError() {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        //hide progressbar and show error dialog
+                    }
+                });
 //                DayOfWeek dayOfWeek1 = new DayOfWeek(dayNumber, false,9, 19, 14, 16);
 //                FirebaseService.createDayOfWeek(dayOfWeek1);
 //                Toast.makeText(getContext(), "DAY_OF_WEEK: "+ dayOfWeek, Toast.LENGTH_LONG).show();
@@ -126,5 +167,63 @@ public class HomeFragment extends Fragment {
         });
         // Inflate the layout for this fragment
         return view;
+    }
+
+    public void createList(ArrayList<AppointmentDetails> appointmentDetailsArrayList, DayOfWeek dayOfWeek, Day day ,int year, int month, int dayOfMonth ){
+
+        Map<Date, AppointmentDetails> appointmentDetailsMap = new HashMap<>();
+        for (AppointmentDetails appointment : appointmentDetailsArrayList)
+        {
+            appointmentDetailsMap.put(appointment.getHour(), appointment);
+        }
+//        day.getDayNumber();
+
+        //      Calculation of working hours
+        int openHour = (int) dayOfWeek.getOpenHour();
+        double workingHours = dayOfWeek.getCloseHour() - dayOfWeek.getOpenHour();
+        double totalAppointmentsForView = workingHours*4;
+
+        //      Calculation of breaking hours
+        int breakHour = (int) dayOfWeek.getBreakHourStrat();
+
+        // init calendar Break hour start
+        Calendar calendarBreakStart = Calendar.getInstance();
+        calendarBreakStart.set(year, month, dayOfMonth, breakHour, 0);
+
+        int breakHourEnd = (int) dayOfWeek.getBreakHourEnd();
+
+        // init calendar Break hour end
+        Calendar calendarBreakEnd = Calendar.getInstance();
+        calendarBreakEnd.set(year, month+1, dayOfMonth, breakHourEnd, 0);
+
+        // init calendar working hours
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month+1, dayOfMonth, openHour, 0);
+
+        ArrayList<Line> lines = new ArrayList<>();
+
+        for (int i=0; i<totalAppointmentsForView; i++){
+            Line currentLine = new Line();
+            currentLine.setStartTime(calendar.getTime());
+
+
+            if(appointmentDetailsMap!=null && calendar.getTime().before(calendarBreakStart.getTime()) || calendar.getTime().after(calendarBreakEnd.getTime())) {
+                if(appointmentDetailsMap.containsKey((Date)calendar.getTime()))
+                    currentLine.setUsername(appointmentDetailsMap.get((Date)calendar.getTime()).getUsername());
+            }
+
+
+            if(calendar.getTime().after(calendarBreakStart.getTime()) && calendar.getTime().before(calendarBreakEnd.getTime())) {
+                currentLine.setBreak(true);
+            }
+            calendar.add(Calendar.MINUTE, 15);
+            currentLine.setEndTime(calendar.getTime());
+            lines.add(currentLine);
+
+
+        }
+
+
+
     }
 }

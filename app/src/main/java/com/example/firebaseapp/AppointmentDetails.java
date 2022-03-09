@@ -1,10 +1,10 @@
 package com.example.firebaseapp;
 
-import com.google.firebase.auth.FirebaseAuth;
+import java.util.Date;
 
 public class AppointmentDetails {
     private String username;
-    private String hour;
+    private Date hour;
 
     @Override
     public String toString() {
@@ -15,7 +15,7 @@ public class AppointmentDetails {
     }
 
     public AppointmentDetails() {}
-    public AppointmentDetails(String username, String hour) {
+    public AppointmentDetails(String username, Date hour) {
         this.username = username;
         this.hour = hour;
     }
@@ -28,11 +28,11 @@ public class AppointmentDetails {
         this.username = username;
     }
 
-    public String getHour() {
+    public Date getHour() {
         return hour;
     }
 
-    public void setHour(String hour) {
+    public void setHour(Date hour) {
         this.hour = hour;
     }
 }
